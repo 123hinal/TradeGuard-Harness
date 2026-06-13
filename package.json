@@ -1,0 +1,50 @@
+{
+  "name": "tradeguard-ai-harness",
+  "version": "1.0.0",
+  "private": true,
+  "engines": {
+    "node": ">=18.18.0"
+  },
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "seed": "tsx supabase/seed.ts",
+    "db:migrate": "tsx supabase/migrate.ts",
+    "supabase:configure": "tsx supabase/configure-env.ts"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.39.0",
+    "@radix-ui/react-label": "^2.1.2",
+    "@radix-ui/react-select": "^2.1.6",
+    "@radix-ui/react-slot": "^1.1.2",
+    "@supabase/supabase-js": "^2.49.1",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.475.0",
+    "next": "^15.2.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tailwind-merge": "^3.0.1",
+    "tailwindcss-animate": "^1.0.7",
+    "uuid": "^11.1.0",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.2.0",
+    "@types/node": "^22.13.4",
+    "@types/pg": "^8.11.11",
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
+    "@types/uuid": "^10.0.0",
+    "eslint": "^9.20.1",
+    "eslint-config-next": "^15.2.0",
+    "postcss": "^8.5.2",
+    "tailwindcss": "^3.4.17",
+    "dotenv": "^16.4.7",
+    "pg": "^8.13.3",
+    "tsx": "^4.19.3",
+    "typescript": "^5.7.3"
+  }
+}

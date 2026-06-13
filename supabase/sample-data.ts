@@ -1,0 +1,42 @@
+export const sampleTradeRequests = [
+  {
+    ticker: "NVDA",
+    action: "BUY",
+    amount: 50000,
+    riskProfile: "MODERATE",
+    expectedDecision: "PENDING_HUMAN_REVIEW",
+    description: "High volatility ticker triggers human review",
+  },
+  {
+    ticker: "AAPL",
+    action: "BUY",
+    amount: 30000,
+    riskProfile: "CONSERVATIVE",
+    expectedDecision: "APPROVED",
+    description: "Clean trade passes all checks",
+  },
+  {
+    ticker: "TSLA",
+    action: "BUY",
+    amount: 10000,
+    riskProfile: "AGGRESSIVE",
+    expectedDecision: "BLOCKED",
+    description: "Unapproved security blocked by guardrails",
+  },
+  {
+    ticker: "MSFT",
+    action: "SELL",
+    amount: 60000,
+    riskProfile: "MODERATE",
+    expectedDecision: "BLOCKED",
+    description: "Exceeds max trade size guardrail",
+  },
+  {
+    ticker: "GOOGL",
+    action: "BUY",
+    amount: 25000,
+    riskProfile: "MODERATE",
+    expectedDecision: "APPROVED",
+    description: "Moderate buy within all limits",
+  },
+];
