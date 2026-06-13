@@ -1,0 +1,311 @@
+
+Harness = Risk Department
+         + Compliance Team
+         + Audit Team
+         + Trading Desk Controls
+The agent can recommend trades.
+The harness decides whether the trade is allowed.
+This perfectly demonstrates:
+"Agents focus on tasks. Harnesses focus on constraints."
+________________________________________
+What I'll Build
+TradeGuard Harness
+Input
+{
+  "portfolio_value": 250000,
+  "cash_available": 50000,
+  "risk_profile": "Moderate",
+  "request": "Buy $40,000 NVDA"
+}
+Agent
+Analyzes:
+{
+  "recommendation": "BUY",
+  "ticker": "NVDA",
+  "amount": 40000,
+  "confidence": 0.91
+}
+Harness
+Evaluates:
+✓ Risk limits
+✓ Concentration limits
+✓ Compliance rules
+✓ Portfolio allocation
+✓ Confidence threshold
+✓ Market volatility
+Final decision:
+{
+  "status": "REJECTED",
+  "reason": "Position concentration exceeds limit"
+}
+________________________________________
+Architecture
+                    ┌─────────────────┐
+                    │   User Request  │
+                    └────────┬────────┘
+                             │
+                             ▼
+                  ┌─────────────────────┐
+                  │ Material Handler    │
+                  └────────┬────────────┘
+                           │
+                           ▼
+                  ┌─────────────────────┐
+                  │ Guardrails          │
+                  └────────┬────────────┘
+                           │
+                           ▼
+                  ┌─────────────────────┐
+                  │ Trade Agent         │
+                  └────────┬────────────┘
+                           │
+                           ▼
+                  ┌─────────────────────┐
+                  │ Tools               │
+                  └────────┬────────────┘
+                           │
+                           ▼
+                  ┌─────────────────────┐
+                  │ Checkpoints         │
+                  └────────┬────────────┘
+                           │
+                           ▼
+                  ┌─────────────────────┐
+                  │ Alarm Engine        │
+                  └────────┬────────────┘
+                           │
+                           ▼
+                  ┌─────────────────────┐
+                  │ Final Decision      │
+                  └─────────────────────┘
+________________________________________
+Pillar 1 — Agent Loop
+This is your runtime orchestration layer.
+while (!done) {
+    analyze()
+    decide()
+    callTool()
+    evaluate()
+}
+Stop Conditions
+MAX_ITERATIONS = 5
+MAX_COST = 0.25
+MAX_RUNTIME = 20s
+If exceeded:
+{
+  "alarm": "AGENT_LIMIT_EXCEEDED"
+}
+This shows the harness controlling the LLM.
+________________________________________
+Pillar 2 — Tools
+The model needs "hands."
+Tool 1
+Portfolio Analyzer
+analyzePortfolio()
+Returns:
+{
+  "largestHolding": "AAPL",
+  "allocation": 18
+}
+________________________________________
+Tool 2
+Risk Calculator
+calculateRisk()
+Returns:
+{
+  "riskScore": 82
+}
+________________________________________
+Tool 3
+Market Data
+getMarketData("NVDA")
+Returns:
+{
+  "volatility": "HIGH"
+}
+________________________________________
+Tool Contract
+interface Tool {
+   name: string
+   schema: JSONSchema
+   execute(input): Result
+}
+________________________________________
+Pillar 3 — Guardrails
+These happen BEFORE execution.
+Maximum Trade Size
+{
+  "name": "MAX_TRADE_SIZE",
+  "limit": 50000
+}
+________________________________________
+Approved Securities
+{
+  "name": "APPROVED_SECURITIES"
+}
+Only:
+AAPL
+MSFT
+NVDA
+GOOGL
+________________________________________
+Retirement Account Restrictions
+{
+  "name": "RETIREMENT_ACCOUNT"
+}
+Reject:
+Options
+Margin
+Leverage
+________________________________________
+Human Approval Guardrail
+If:
+Trade > $25,000
+Require:
+Manual Approval
+This satisfies the challenge's human-in-the-loop recommendation.
+________________________________________
+Pillar 4 — Checkpoints
+The challenge explicitly requires pass/fail checkpoints.
+Checkpoint 1
+Concentration Risk
+Pass if:
+Position < 20%
+Result:
+{
+  "checkpoint": "CONCENTRATION",
+  "passed": false
+}
+________________________________________
+Checkpoint 2
+Risk Score
+Pass if:
+Risk Score < 80
+________________________________________
+Checkpoint 3
+Agent Confidence
+Pass if:
+Confidence > 70%
+________________________________________
+Checkpoint 4
+Liquidity
+Pass if:
+Average Daily Volume > Threshold
+________________________________________
+Material Handling
+Challenge requirement.
+Input Normalization
+Input:
+{
+  "request": "Buy 40k NVDA"
+}
+Normalize:
+{
+  "action": "BUY",
+  "ticker": "NVDA",
+  "amount": 40000
+}
+________________________________________
+Output Standardization
+Every stage emits:
+{
+  "runId": "...",
+  "stage": "...",
+  "status": "...",
+  "timestamp": "..."
+}
+________________________________________
+Alarms
+The challenge specifically wants structured alarms.
+Alarm Structure
+{
+  "type": "",
+  "severity": "",
+  "context": {},
+  "recommended_action": ""
+}
+________________________________________
+Example 1
+{
+  "type": "POSITION_CONCENTRATION",
+  "severity": "HIGH",
+  "context": {
+    "ticker": "NVDA",
+    "allocation": "34%"
+  },
+  "recommended_action": "Reduce position size"
+}
+________________________________________
+Example 2
+{
+  "type": "RISK_SCORE_EXCEEDED",
+  "severity": "CRITICAL",
+  "context": {
+    "score": 92
+  },
+  "recommended_action": "Reject trade"
+}
+________________________________________
+Example 3
+{
+  "type": "LOW_CONFIDENCE",
+  "severity": "MEDIUM",
+  "context": {
+    "confidence": 0.48
+  },
+  "recommended_action": "Escalate to human"
+}
+________________________________________
+Observability (Your Secret Weapon)
+Although not a required pillar in the brief, it can be your differentiator.
+Instrument everything with:
+OpenTelemetry
+Trace:
+Run
+ ├── Guardrail
+ ├── Agent
+ ├── Tool Call
+ ├── Checkpoint
+ ├── Alarm
+ └── Decision
+Capture:
+Latency
+Token Usage
+Cost
+Retries
+Checkpoint Results
+Alarm Counts
+Tool Success %
+Dashboard:
+p95 latency
+$/trade
+alarm frequency
+checkpoint failure %
+agent confidence
+________________________________________
+Swappable Agent Design
+One of the strongest "Should" requirements.
+interface TradeAgent {
+   analyze(input): TradeRecommendation
+}
+Implement:
+OpenAITradeAgent
+ClaudeTradeAgent
+Switch with:
+AGENT_PROVIDER=openai
+No harness code changes.
+________________________________________
+Demo Flow (5 Minutes)
+1.	User requests: "Buy $40,000 NVDA."
+2.	Material handler normalizes request.
+3.	Agent recommends BUY.
+4.	Tools calculate risk.
+5.	Concentration checkpoint fails.
+6.	Alarm fires.
+7.	Trade blocked.
+8.	User reduces amount to $10,000.
+9.	Checkpoints pass.
+10.	Trade approved.
+11.	Swap OpenAI agent with another agent.
+12.	Same harness still works.
+
