@@ -304,7 +304,7 @@ Frontend
 Backend Harness
 •	Nodejs, python 
 AI Layer
-•	Claude API or OpenAI API 
+•	Claude API(Claude 3.5) or OpenAI API 
 Database
 •	PostgreSQL 
 Observability
@@ -345,4 +345,5 @@ Human approval required.
 Agent stops.
 Harness escalates.
 ________________________________________
+
 
