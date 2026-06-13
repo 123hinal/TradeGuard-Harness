@@ -256,8 +256,8 @@ Example 3
   "recommended_action": "Escalate to human"
 }
 ________________________________________
-Observability (Your Secret Weapon)
-Although not a required pillar in the brief, it can be your differentiator.
+Observability (Weapon)
+
 Instrument everything with:
 OpenTelemetry
 Trace:
@@ -269,31 +269,56 @@ Run
  ├── Alarm
  └── Decision
 Capture:
-Latency
-Token Usage
-Cost
-Retries
-Checkpoint Results
-Alarm Counts
-Tool Success %
-Dashboard:
-p95 latency
-$/trade
-alarm frequency
-checkpoint failure %
-agent confidence
+•	Latency
+•	Token Usage
+•	Cost
+•	Retries
+•	Checkpoint Results
+•	Alarm Counts
+•	Tool Success %
+•	Dashboard:
+•	p95 latency
+•	$/trade
+•	alarm frequency
+•	checkpoint failure %
+•	agent confidence
 ________________________________________
 Swappable Agent Design
-One of the strongest "Should" requirements.
+
 interface TradeAgent {
    analyze(input): TradeRecommendation
 }
 Implement:
-OpenAITradeAgent
-ClaudeTradeAgent
-Switch with:
-AGENT_PROVIDER=openai
-No harness code changes.
+•	OpenAITradeAgent
+•	ClaudeTradeAgent
+interface TradeAgent {
+  analyzeTrade(input): TradeRecommendation
+}
+Swap agents with:
+•	AGENT_PROVIDER=openai
+•	No harness changes required.
+
+
+Frontend
+•	Angular 18 
+Backend Harness
+•	Nodejs, python 
+AI Layer
+•	Claude API or OpenAI API 
+Database
+•	PostgreSQL 
+Observability
+•	Langfuse or simple audit table 
+Deployment
+•	Render, Railway, or AWS 
+For a 24-hour build, I'd focus on:
+1.	One trade agent. 
+2.	4–5 guardrails. 
+3.	4 checkpoints. 
+4.	5 alarm types. 
+5.	Audit dashboard. 
+
+
 ________________________________________
 Demo Flow (5 Minutes)
 1.	User requests: "Buy $40,000 NVDA."
@@ -307,5 +332,17 @@ Demo Flow (5 Minutes)
 9.	Checkpoints pass.
 10.	Trade approved.
 11.	Swap OpenAI agent with another agent.
-12.	Same harness still works.
+Same harness still works.
+
+
+
+Human-in-the-Loop
+Example:
+Risk Score = 78
+Trade is near threshold.
+Harness pauses:
+Human approval required.
+Agent stops.
+Harness escalates.
+________________________________________
 
